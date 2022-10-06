@@ -19,7 +19,8 @@ export class AppService {
   }
 
   async runCommand(command: string): Promise<string> {
-    return await exec(command).stdout;
+    const result = await exec(command);
+    return result.stdout;
   }
 
   async buildProject(projectName: string): Promise<void> {
