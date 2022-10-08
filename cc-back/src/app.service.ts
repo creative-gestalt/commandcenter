@@ -47,11 +47,13 @@ export class AppService {
                 );
                 await exec(`docker image prune -f && docker network prune -f`, {
                   shell: '/bin/bash',
-                }).catch((error) =>
-                  this.eventService.getProgress(
-                    `Error: ${error.cmd}; Code: ${error.code}`,
-                  ),
-                );
+                })
+                  .then(() => this.eventService.getProgress(''))
+                  .catch((error) =>
+                    this.eventService.getProgress(
+                      `Error: ${error.cmd}; ${error.code}`,
+                    ),
+                  );
               })
               .catch((error) =>
                 this.eventService.getProgress(
