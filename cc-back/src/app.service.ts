@@ -34,43 +34,24 @@ export class AppService {
           shell: '/bin/bash',
         })
           .then(async () => {
-            this.eventService.getProgress('docker compose build --force-rm');
+            this.eventService.getProgress('docker compose up -d --build');
             await exec(
-              `cd ~/Projects/${projectName} && docker compose build --force-rm`,
+              `cd ~/Projects/${projectName} && docker compose up -d --build`,
               {
                 shell: '/bin/bash',
               },
             )
               .then(async () => {
-                this.eventService.getProgress('docker compose up -d');
-                await exec(
-                  `cd ~/Projects/${projectName} && docker compose up -d`,
-                  {
-                    shell: '/bin/bash',
-                  },
-                )
-                  .then(async () => {
-                    this.eventService.getProgress(
-                      'docker image prune -f && docker network prune -f',
-                    );
-                    await exec(
-                      'docker image prune -f && docker network prune -f',
-                      {
-                        shell: '/bin/bash',
-                      },
-                    )
-                      .then(() => this.eventService.getProgress(''))
-                      .catch((error) =>
-                        this.eventService.getProgress(
-                          `Error: ${error.cmd}; ${error.code}`,
-                        ),
-                      );
-                  })
-                  .catch((error) =>
-                    this.eventService.getProgress(
-                      `Error: ${error.cmd}; Code: ${error.code}`,
-                    ),
-                  );
+                this.eventService.getProgress(
+                  'docker image prune -f && docker network prune -f',
+                );
+                await exec(`docker image prune -f && docker network prune -f`, {
+                  shell: '/bin/bash',
+                }).catch((error) =>
+                  this.eventService.getProgress(
+                    `Error: ${error.cmd}; Code: ${error.code}`,
+                  ),
+                );
               })
               .catch((error) =>
                 this.eventService.getProgress(
